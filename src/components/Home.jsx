@@ -23,7 +23,7 @@ const Home = () => {
       const res = await api.get(`/movie/${movie.id}?api_key=${api_key}`);
       console.log(res?.data);
       dispatch(selectedMovie(res?.data));
-      navigate(`/movie/${movie.original_title}`);
+      navigate(`/movie/${movie.id}`);
     } catch (error) {}
   };
 
