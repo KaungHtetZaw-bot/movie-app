@@ -12,19 +12,14 @@ const Home = () => {
 
   const fetchingMovies = async () => {
     try {
-      const res = await api.get(`/trending/movie/week?api_key=${api_key}`);
-      // console.log(res?.data?.results);
+      const res = await api.get(`/trending/all/week?api_key=${api_key}`);
+      console.log("trending all", res?.data);
       dispatch(fetchMovies(res?.data?.results));
     } catch (error) {}
   };
 
   const Enter = async (movie) => {
-    try {
-      const res = await api.get(`/movie/${movie.id}?api_key=${api_key}`);
-      console.log(res?.data);
-      dispatch(selectedMovie(res?.data));
-      navigate(`/movie/${movie.id}`);
-    } catch (error) {}
+    navigate(`/${movie.media_type}/${movie.id}`);
   };
 
   useEffect(() => {

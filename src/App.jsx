@@ -13,7 +13,10 @@ function App() {
       <HeaderBar />
       <Routes>
         <Route path={"/"} element={<Home />}></Route>
-        <Route path={"/movie/:movie_id"} element={<MovieDetail />}></Route>
+        <Route
+          path={"/:media_type/:movie_id"}
+          element={<MovieDetail />}
+        ></Route>
         <Route path={"/movie"} element={<SortByMovie />}></Route>
         <Route path={"/series"} element={<SortBySeries />}></Route>
         <Route path="*" element={<NotFound />} />

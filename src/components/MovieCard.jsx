@@ -5,25 +5,28 @@ const MovieCard = ({ Enter }) => {
   const movies = useSelector((state) => state.movies.movies);
   return (
     <div className="container mx-auto p-4">
-      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-4">
         {movies && movies.length > 0 ? (
           movies.map((movie, index) => {
             return (
               <div
-                className="relative bg-gray-900 rounded-lg overflow-hidden text-white group"
+                className="w-[100px] lg:max-w-[240px] md:w-[160px] md:max-w-[130px] h-50 lg:h-80 md:h-60 relative bg-gray-900 rounded-lg overflow-hidden text-white group hover:scale-105 transition-transform duration-300"
+                onClick={() => {
+                  Enter(movie);
+                }}
                 key={index}
               >
                 <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt="movie poster"
-                  className="w-full h-60 object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
-                <div className="p-2">
+                {/* <div className="p-2">
                   <h1 className="text-sm font-bold truncate">
-                    {movie.original_title}
+                    {movie.original_title || movie.name}
                   </h1>
-                </div>
-                <div
+                </div> */}
+                {/* <div
                   className="absolute inset-0 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2"
                   style={{
                     backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.1)), url(https://image.tmdb.org/t/p/w500${movie.backdrop_path})`,
@@ -45,7 +48,7 @@ const MovieCard = ({ Enter }) => {
                       Watch
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             );
           })
