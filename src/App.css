@@ -15,3 +15,17 @@ body {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+
+.section-divider {
+  height: 100px;
+  width: 100%;
+  background-image: linear-gradient(
+    rgba(15, 23, 237, 0.5),
+    rgba(93, 90, 97, 0.5)
+  );
+  border-radius: 500%;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* <-- Add this */
+  overflow: hidden;
+}

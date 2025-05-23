@@ -5,7 +5,7 @@ const MovieCard = ({ Enter }) => {
   const movies = useSelector((state) => state.movies.movies);
   return (
     <div className="container mx-auto p-4">
-      <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
         {movies && movies.length > 0 ? (
           movies.map((movie, index) => {
             return (
@@ -19,7 +19,7 @@ const MovieCard = ({ Enter }) => {
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt="movie poster"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full"
                 />
                 {/* <div className="p-2">
                   <h1 className="text-sm font-bold truncate">

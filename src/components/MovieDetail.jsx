@@ -34,7 +34,7 @@ const MovieDetail = () => {
   const fetchingSimilarMovie = async () => {
     try {
       const res = await api.get(
-        `/movie/${movie_id}/similar?api_key=${api_key}`
+        `/${media_type}/${movie_id}/similar?api_key=${api_key}`
       );
       dispatch(fetchMovies(res?.data?.results));
     } catch (error) {}
@@ -85,7 +85,7 @@ const MovieDetail = () => {
                     {movie.popularity}
                   </p>
                   <p>
-                    <span className="font-semibold">Countries:</span>
+                    <span className="font-semibold">Countries : </span>
                     {movie.production_countries?.map((c, idx) => (
                       <span key={idx}>
                         {c.name}

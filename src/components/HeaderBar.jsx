@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
+import { FaSearch } from "react-icons/fa";
+import { Button, Toast, ToastToggle } from "flowbite-react";
+import { useState } from "react";
+import { HiFire } from "react-icons/hi";
 
 import {
   Avatar,
@@ -15,10 +19,12 @@ import {
 import { Link } from "react-router-dom";
 
 const HeaderBar = () => {
+  const toastRef = useRef();
+  const [showToast, setShowToast] = useState(false);
   return (
     <div>
       <Navbar>
-        <NavbarBrand href="/">
+        <NavbarBrand href="/home">
           <img
             src="/neo-movies-logo.png"
             className="mr-3 h-6 sm:h-9 rounded-full"
@@ -28,6 +34,29 @@ const HeaderBar = () => {
             Neo Movies
           </span>
         </NavbarBrand>
+
+        <div className="relative flex items-center justify-center">
+          <FaSearch
+            className="text-lg cursor-pointer text-white"
+            onClick={() => setShowToast((state) => !state)}
+          />
+          {showToast && (
+            <div
+              ref={toastRef}
+              className="absolute z-50 top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-gradient-to-r from-gray-900 to-gray-700 px-4 py-2 rounded shadow"
+            >
+              <input
+                type="text"
+                placeholder="Search..."
+                className="rounded border px-2 py-1 text-black outline-none"
+              />
+              <button className="bg-black text-white px-3 py-1 rounded text-sm">
+                Search
+              </button>
+            </div>
+          )}
+        </div>
+
         <div className="flex md:order-2">
           <Dropdown
             arrowIcon={false}
@@ -35,9 +64,8 @@ const HeaderBar = () => {
             label={
               <Avatar
                 alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                rounded
-                className="mr-1"
+                img="/default-profile-pic.png"
+                className="mr-1 bg-white rounded-full"
               />
             }
             aria-label="User menu"
@@ -48,16 +76,15 @@ const HeaderBar = () => {
                 name@flowbite.com
               </span>
             </DropdownHeader>
-            <DropdownItem>Dashboard</DropdownItem>
+            <DropdownItem>Profile</DropdownItem>
             <DropdownItem>Settings</DropdownItem>
-            <DropdownItem>Earnings</DropdownItem>
             <DropdownDivider />
             <DropdownItem>Sign out</DropdownItem>
           </Dropdown>
           <NavbarToggle />
         </div>
         <NavbarCollapse>
-          <NavbarLink href="#" active>
+          <NavbarLink as={Link} to="/home" active>
             Home
           </NavbarLink>
           <NavbarLink as={Link} to="/movie">
