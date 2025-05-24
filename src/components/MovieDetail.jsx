@@ -5,22 +5,14 @@ import RelatedMovie from "./RelatedMovie";
 import CreditsCard from "./CreditsCard";
 import { useParams } from "react-router-dom";
 import { api, api_key } from "../api";
-import { fetchMovies, selectedMovie } from "../redux/actions/movies";
+import { useFetchMovies, useSelectedMovie } from "../utils/help";
 
 const MovieDetail = () => {
-  const dispatch = useDispatch();
   const movie = useSelector((state) => state.movies.movie);
   const movies = useSelector((state) => state.movies.movies);
   const { movie_id, media_type } = useParams();
-  const fetchMovieById = async () => {
-    try {
-      const res = await api.get(
-        `/${media_type}/${parseInt(movie_id)}?api_key=${api_key}`
-      );
-      console.log(res);
-      dispatch(selectedMovie(res.data));
-    } catch (error) {}
-  };
+  const fetchMovieById = useSelectedMovie();
+  const fetchingSimilarMovie = useFetchMovies();
 
   const fetchCredits = async () => {
     try {
@@ -31,20 +23,15 @@ const MovieDetail = () => {
     } catch (error) {}
   };
 
-  const fetchingSimilarMovie = async () => {
-    try {
-      const res = await api.get(
-        `/${media_type}/${movie_id}/similar?api_key=${api_key}`
-      );
-      dispatch(fetchMovies(res?.data?.results));
-    } catch (error) {}
-  };
-
   useEffect(() => {
-    fetchMovieById();
-    fetchingSimilarMovie();
+    fetchMovieById(
+      `/${media_type || "movie"}/${parseInt(movie_id)}?api_key=${api_key}`
+    );
+    fetchingSimilarMovie(
+      `/${media_type}/${movie_id}/similar?api_key=${api_key}`
+    );
     fetchCredits();
-  }, []);
+  }, [movie_id, media_type, fetchMovieById, fetchingSimilarMovie]);
 
   return (
     <>
@@ -126,7 +113,12 @@ const MovieDetail = () => {
           <RelatedMovie movies={movies} />
         </div>
       ) : (
-        <p>loading....</p>
+        <div class="flex items-center justify-center h-screen">
+          <div class="relative">
+            <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
+            <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
+          </div>
+        </div>
       )}
     </>
   );

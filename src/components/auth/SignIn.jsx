@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { signIn } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "flowbite-react";
 
 const SignIn = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigte = useNavigate();
+  const navigate = useNavigate();
   const handleSignIn = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     const logInInfo = { email, password };
     console.log("sign in");
@@ -16,10 +19,12 @@ const SignIn = () => {
       console.log("sign in", res);
       if (res.success) {
         localStorage.setItem("user", JSON.stringify(res.user));
-        navigte("/home");
+        navigate("/home");
       }
     } catch (error) {
-      throw error;
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -77,7 +82,18 @@ const SignIn = () => {
                 type="submit"
                 className="w-32 bg-gradient-to-r from-cyan-400 to-cyan-600 text-white py-2 rounded-lg mx-auto block focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 mb-2"
               >
-                Log In
+                {!isLoading ? (
+                  <span>Log In</span>
+                ) : (
+                  <div>
+                    <Spinner
+                      aria-label="Spinner button example"
+                      size="sm"
+                      light
+                    />
+                    <span className="pl-3">Loading...</span>
+                  </div>
+                )}
               </button>
             </form>
             <div className="text-center">

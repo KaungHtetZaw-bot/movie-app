@@ -16,31 +16,31 @@ const AuthScreen = () => {
         }}
         className="text-white"
       >
-        <div
+        {/* <div
           style={{
             backgroundImage: `linear-gradient(to right, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.6))`,
           }}
-        >
-          <Navbar container>
-            <NavbarBrand href="/">
-              <img
-                src="/neo-movies-logo.png"
-                className="mr-3 h-6 sm:h-9"
-                alt="neo-movies-logo"
-              />
-              <span className="self-center whitespace-nowrap text-xl font-semibold text-white">
-                Neo Movies
-              </span>
-            </NavbarBrand>
-            <div className="flex md:order-2">
-              <Link to="/signin">
-                <Button color="light" className="text-black">
-                  Sign In
-                </Button>
-              </Link>
-            </div>
-          </Navbar>
-        </div>
+        > */}
+        <Navbar container>
+          <NavbarBrand href="/">
+            <img
+              src="/neo-movies-logo.png"
+              className="mr-3 h-6 sm:h-9"
+              alt="neo-movies-logo"
+            />
+            <span className="self-center whitespace-nowrap text-xl font-semibold text-white">
+              Neo Movies
+            </span>
+          </NavbarBrand>
+          <div className="flex md:order-2">
+            <Link to="/signin">
+              <Button color="light" className="text-black">
+                Sign In
+              </Button>
+            </Link>
+          </div>
+        </Navbar>
+        {/* </div> */}
 
         <div className="flex flex-col justify-center items-center text-center px-4 py-16 md:py-32">
           <h1 className="text-4xl md:text-6xl font-extrabold mb-4 break-words lg:w-1/2 md:w-full">
@@ -65,66 +65,36 @@ const AuthScreen = () => {
             <button
               className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-semibold"
               onClick={() => {
-                navigate("/signup");
+                if (!email || !/\S+@\S+\.\S+/.test(email)) {
+                  alert("Please enter a valid email address.");
+                  return;
+                }
+                navigate("/signup", { state: { email } });
               }}
             >
               Get Started
             </button>
           </div>
         </div>
-        <div
-          className="relative w-full overflow-hidden"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right-left, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.6))",
-          }}
-        >
-          <svg
-            className="w-full h-[100px]"
-            viewBox="0 0 1440 100"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient
-                id="gradient-stroke"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                <stop offset="0%" stopColor="#f91a1a" />
-                <stop offset="100%" stopColor="#df5eeb" />
-              </linearGradient>
-            </defs>
-
-            {/* Shadow path */}
-            <path
-              d="M0,80 C360,0 1080,0 1440,80"
-              strokeWidth="10"
-              transform="translate(0, 6)"
-              style={{
-                filter: "drop-shadow(5px 4px 8px rgba(0, 0, 0, 0.5))",
-                stroke: "black",
-                opacity: 1,
-              }}
-            />
-
-            {/* Main path */}
-            <path
-              d="M0,80 C360,0 1080,0 1440,80"
-              stroke="url(#gradient-stroke)"
-              strokeWidth="4"
-              fill="none"
-            />
-          </svg>
-        </div>
+        <div className="relative w-full overflow-hidden"></div>
       </div>
       <div
+        className="relative"
         style={{
-          backgroundImage:
-            "linear-gradient(to right-left, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.6))",
+          backgroundColor: "#202e33",
         }}
       >
+        <svg
+          className="w-full h-[150px] absolute -top-30"
+          viewBox="0 0 1440 150"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill="#202e33"
+            d="M0,80 C480,130 960,30 1440,80 L1440,150 L0,150 Z"
+          />
+        </svg>
         <div className="px-4 py-6 container rounded">
           <h2 className="text-white text-2xl font-bold mb-4">Trending Now</h2>
           <div className="flex gap-8 overflow-x-auto no-scrollbar pl-4 mx-auto mt-3">

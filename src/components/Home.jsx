@@ -1,34 +1,40 @@
 import React, { useEffect } from "react";
 import MovieCard from "./MovieCard";
-import { useDispatch } from "react-redux";
-import { fetchMovies, selectedMovie } from "../redux/actions/movies";
-import { api, api_key } from "../api";
+import { api_key } from "../api";
 import Footer from "./Footer";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useFetchMovies } from "../utils/help";
+import { useSelector } from "react-redux";
 
 const Home = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const fetchingMovies = async () => {
-    try {
-      const res = await api.get(`/trending/all/week?api_key=${api_key}`);
-      console.log("trending all", res?.data);
-      dispatch(fetchMovies(res?.data?.results));
-    } catch (error) {}
-  };
+  const fetchMovies = useFetchMovies();
+  const movies = useSelector((state) => {
+    state.movies.movies;
+  });
 
   const Enter = async (movie) => {
     navigate(`/${movie.media_type}/${movie.id}`);
   };
 
   useEffect(() => {
-    fetchingMovies();
+    fetchMovies(`/trending/all/week?api_key=${api_key}`);
   }, []);
   return (
     <div className="container mx-auto mt-3">
-      <MovieCard Enter={Enter} />
-      <Footer />
+      {!movies ? (
+        <div>
+          <MovieCard Enter={Enter} />
+          <Footer />
+        </div>
+      ) : (
+        <div class="flex items-center justify-center h-screen">
+          <div class="relative">
+            <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
+            <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

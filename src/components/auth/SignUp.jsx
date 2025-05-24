@@ -2,19 +2,25 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { signUp } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
-import { stringify } from "postcss";
+import { useLocation } from "react-router-dom";
+import { Spinner } from "flowbite-react";
 
 const SignUp = () => {
+  const location = useLocation();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(location.state.email || "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
+
     if (password === confirmPassword) {
       const userInfo = { name, email, password };
+
       try {
         const res = await signUp(userInfo);
         console.log("res", res);
@@ -25,6 +31,8 @@ const SignUp = () => {
       } catch (error) {
         console.log(error);
         alert("something wrong! try again.");
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert("passwords must be match");
@@ -70,6 +78,7 @@ const SignUp = () => {
                   Email Address
                 </label>
                 <input
+                  value={email}
                   type="email"
                   id="email"
                   name="email"
@@ -100,7 +109,7 @@ const SignUp = () => {
                   Confirm Password
                 </label>
                 <input
-                  type="confirmPassword"
+                  type="password"
                   id="confirmPassword"
                   name="confirmPassword"
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -114,7 +123,18 @@ const SignUp = () => {
                 type="submit"
                 className="w-32 bg-gradient-to-r from-cyan-400 to-cyan-600 text-white py-2 rounded-lg mx-auto block focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 mb-2"
               >
-                Register
+                {isLoading ? (
+                  <div>
+                    <Spinner
+                      aria-label="Spinner button example"
+                      size="sm"
+                      light
+                    />
+                    <span className="pl-3">Loading...</span>
+                  </div>
+                ) : (
+                  <span>Register</span>
+                )}
               </button>
             </form>
             <div className="text-center">
