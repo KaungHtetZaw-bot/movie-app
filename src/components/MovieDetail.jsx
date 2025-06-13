@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MovieDetailNavbar from "./MovieDetailNavbar";
 import RelatedMovie from "./RelatedMovie";
@@ -8,41 +8,55 @@ import { api, api_key } from "../api";
 import { useFetchMovies, useSelectedMovie } from "../utils/help";
 
 const MovieDetail = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [err, setErr] = useState("");
   const movie = useSelector((state) => state.movies.movie);
   const movies = useSelector((state) => state.movies.movies);
   const { movie_id, media_type } = useParams();
   const fetchMovieById = useSelectedMovie();
   const fetchingSimilarMovie = useFetchMovies();
 
-  const fetchCredits = async () => {
-    try {
-      const res = await api.get(
-        `/${media_type}/${parseInt(movie_id)}/credits?api_key=${api_key}`
-      );
-      console.log("credits", res);
-    } catch (error) {}
-  };
+  // const fetchCredits = async () => {
+  //   try {
+  //     const res = await api.get(
+  //       `/${media_type}/${parseInt(movie_id)}/credits?api_key=${api_key}`
+  //     );
+  //     console.log("credits", res);
+  //   } catch (error) {}
+  // };
 
   useEffect(() => {
-    fetchMovieById(
-      `/${media_type || "movie"}/${parseInt(movie_id)}?api_key=${api_key}`
-    );
-    fetchingSimilarMovie(
-      `/${media_type}/${movie_id}/similar?api_key=${api_key}`
-    );
-    fetchCredits();
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        await fetchMovieById(
+          `/${media_type || "movie"}/${parseInt(movie_id)}?api_key=${api_key}`
+        );
+        await fetchingSimilarMovie(
+          `/${media_type}/${movie_id}/similar?api_key=${api_key}`
+        );
+        // await fetchCredits();
+      } catch (error) {
+        console.log(error);
+        setErr(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [movie_id, media_type, fetchMovieById, fetchingSimilarMovie]);
 
   return (
     <>
-      {movie ? (
+      {!isLoading ? (
         <div className="mt-3">
           <div
             style={{
               backgroundImage: `linear-gradient(to right, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.6)), url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
             }}
           >
-            <div className="container flex flex-row  p-4 backgrounImage">
+            <div className="container flex flex-row  p-4">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt="movie poster"
@@ -54,9 +68,10 @@ const MovieDetail = () => {
                   {movie.original_title || movie.name}
                 </h1>
 
-                <p className="text-sm text-gray-300 mb-1">
-                  <span className="font-semibold">Release Date:</span>{" "}
-                  {movie.release_date}
+                <p>
+                  <span className="font-semibold">Rating:</span> ⭐{" "}
+                  {movie.vote_average?.toFixed(1) || "N/A"} (
+                  {movie.vote_count?.toLocaleString() || 0} votes)
                 </p>
 
                 <div className="text-sm text-gray-300 space-y-4 mb-2">
@@ -65,8 +80,10 @@ const MovieDetail = () => {
                     {movie.runtime} mins
                   </p>
                   <p>
-                    <span className="font-semibold">Rating:</span> ⭐ 4.5
+                    <span className="font-semibold">Rating:</span> ⭐{" "}
+                    {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
                   </p>
+
                   <p>
                     <span className="font-semibold">Popularity:</span>{" "}
                     {movie.popularity}
@@ -113,10 +130,10 @@ const MovieDetail = () => {
           <RelatedMovie movies={movies} />
         </div>
       ) : (
-        <div class="flex items-center justify-center h-screen">
-          <div class="relative">
-            <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
-            <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
+        <div className="flex items-center justify-center h-screen">
+          <div className="relative">
+            <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
+            <div className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
           </div>
         </div>
       )}

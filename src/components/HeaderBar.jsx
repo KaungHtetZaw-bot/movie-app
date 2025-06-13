@@ -1,8 +1,7 @@
 import React, { useRef } from "react";
 import { FaSearch } from "react-icons/fa";
-import { Button, Toast, ToastToggle } from "flowbite-react";
 import { useState } from "react";
-import { HiFire } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 import {
   Avatar,
@@ -17,10 +16,17 @@ import {
   NavbarToggle,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const HeaderBar = () => {
+  const userStore = localStorage.getItem("user");
+  const user = userStore ? JSON.parse(userStore) : null;
   const toastRef = useRef();
   const [showToast, setShowToast] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log(user);
+  }, []);
   return (
     <div>
       <Navbar>
@@ -71,15 +77,24 @@ const HeaderBar = () => {
             aria-label="User menu"
           >
             <DropdownHeader>
-              <span className="block text-sm">Bonnie Green</span>
+              <span className="block text-sm">
+                {user?.providerData?.[0]?.displayName || "Guest"}
+              </span>
               <span className="block truncate text-sm font-medium">
-                name@flowbite.com
+                {user?.email || "guest@example.com"}
               </span>
             </DropdownHeader>
             <DropdownItem>Profile</DropdownItem>
             <DropdownItem>Settings</DropdownItem>
             <DropdownDivider />
-            <DropdownItem>Sign out</DropdownItem>
+            <DropdownItem
+              onClick={() => {
+                localStorage.removeItem("user");
+                navigate("/");
+              }}
+            >
+              Sign out
+            </DropdownItem>
           </Dropdown>
           <NavbarToggle />
         </div>
