@@ -2,17 +2,15 @@ import React from "react";
 import { TabItem, Tabs } from "flowbite-react";
 import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
+import CreditsCard from "./CreditsCard";
 
 const MovieDetailNavbar = ({ movie }) => {
   return (
     <div>
       <Tabs aria-label="Tabs with icons" variant="underline">
-        <TabItem active title="Overview">
+        <TabItem active title="CAST">
           <div className="bg-gray-800 mt-2 p-4 rounded-b-xl flex justify-center">
-            <div className="max-w-3xl">
-              <h2 className="font-bold text-xl mb-2">Overview</h2>
-              <p className="text-gray-300 leading-relaxed">{movie.overview}</p>
-            </div>
+            <CreditsCard />
           </div>
         </TabItem>
         <TabItem title="Trailer">

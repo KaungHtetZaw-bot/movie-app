@@ -1,22 +1,22 @@
 import React, { useEffect } from "react";
 import MovieCard from "./MovieCard";
 import { api_key } from "../api";
-import Footer from "./Footer";
+// import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
-import {
-  useFetchSeries,
-  useFetchTrendAll,
-  useFetchMovies,
-} from "../utils/help";
 import { useSelector } from "react-redux";
 import TrendingMovie from "./TrendingMovie";
 import SeriesCard from "./SeriesCard";
+import {
+  fetchTrendAll,
+  fetchMovies,
+  fetchSeries,
+} from "../redux/actions/movies";
+import { useFetch } from "../utils/help";
 
 const Home = () => {
   const navigate = useNavigate();
-  const fetchMovies = useFetchMovies();
-  const fetchSeries = useFetchSeries();
-  const fetchTrendAll = useFetchTrendAll();
+
+  const fetch = useFetch();
   const movies = useSelector((state) => {
     state.movies.movies;
   });
@@ -26,9 +26,9 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchTrendAll(`/trending/all/week?api_key=${api_key}`);
-    fetchMovies(`/trending/movie/week?api_key=${api_key}`);
-    fetchSeries(`/trending/tv/week?api_key=${api_key}`);
+    fetch(`/trending/all/week?api_key=${api_key}`, fetchTrendAll);
+    fetch(`/trending/movie/week?api_key=${api_key}`, fetchMovies);
+    fetch(`/trending/tv/week?api_key=${api_key}`, fetchSeries);
   }, []);
   return (
     <div className="container mx-auto mt-3">
@@ -37,7 +37,7 @@ const Home = () => {
           <TrendingMovie Enter={Enter} />
           <MovieCard Enter={Enter} />
           <SeriesCard Enter={Enter} />
-          <Footer />
+          {/* <Footer /> */}
         </div>
       ) : (
         <div className="flex items-center justify-center h-screen">

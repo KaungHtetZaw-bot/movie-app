@@ -8,6 +8,7 @@ const TrendingMovie = () => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const trendAll = useSelector((state) => state.movies.trendAll);
+  const [posterLoaded, setPosterLoaded] = useState({});
   const navigate = useNavigate();
   const scrollRef = useRef(null);
 
@@ -20,6 +21,10 @@ const TrendingMovie = () => {
         behavior: "smooth",
       });
     }
+  };
+
+  const handleImageLoad = (id) => {
+    setPosterLoaded((prev) => ({ ...prev, [id]: true }));
   };
 
   const handleScroll = () => {
@@ -40,13 +45,13 @@ const TrendingMovie = () => {
         current.removeEventListener("scroll", handleScroll);
       }
     };
+    handleImg();
   }, []);
 
   return (
     <div className="select-none">
       <div className="sticky top-0 bg-gray-800 p-3 rounded-xl items-center">
         <h1 className="font-bold text-white mb-3">TRENDING</h1>
-
         <label className="inline-flex items-center cursor-pointer">
           <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
             Today
@@ -73,7 +78,7 @@ const TrendingMovie = () => {
           ref={scrollRef}
         >
           <div className="flex px-4">
-            {trendAll.slice(0, 10).map((trendAllEach) => (
+            {trendAll?.slice(0, 10).map((trendAllEach) => (
               <div
                 className="w-40 h-60 md:w-48 md:h-72 flex-shrink-0 p-[3px] text-center rounded-lg hover:scale-105 transition-transform duration-300 cursor-pointer bg-gray-900 m-3"
                 key={trendAllEach.id}
@@ -81,10 +86,18 @@ const TrendingMovie = () => {
                   navigate(`/${trendAllEach.media_type}/${trendAllEach.id}`)
                 }
               >
+                {!posterLoaded[trendAllEach.id] && (
+                  <div className="flex items-center justify-center w-full h-full text-white">
+                    Loading...
+                  </div>
+                )}
                 <img
                   src={`https://image.tmdb.org/t/p/w500${trendAllEach.poster_path}`}
                   alt="movie poster"
-                  className="w-full h-full rounded-lg object-cover"
+                  className={`w-full h-full rounded-lg object-cover ${
+                    posterLoaded[trendAllEach.id] ? "" : "hidden"
+                  }`}
+                  onLoad={() => handleImageLoad(trendAllEach.id)}
                 />
               </div>
             ))}

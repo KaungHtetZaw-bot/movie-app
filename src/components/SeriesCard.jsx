@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-const SeriesCard = () => {
+const SeriesCard = ({ Enter }) => {
   const series = useSelector((state) => state.movies.series);
   return (
     <div>

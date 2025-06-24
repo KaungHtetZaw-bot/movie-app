@@ -1,58 +1,41 @@
 import { useDispatch } from "react-redux";
 import { api } from "../api";
-import {
-  clearSelectedMovie,
-  fetchTrendAll,
-  fetchSeries,
-  fetchMovies,
-  selectedMovie,
-} from "../redux/actions/movies";
+import { clearSelectedMovie, selectedMovie } from "../redux/actions/movies";
 import { useCallback } from "react";
 
-export const useFetchTrendAll = () => {
+export const useFetch = () => {
   const dispatch = useDispatch();
   return useCallback(
-    async (endpoint) => {
+    async (endpoint, actionCreator) => {
       try {
         const res = await api.get(endpoint);
-        dispatch(fetchTrendAll(res?.data?.results));
+        if (actionCreator) {
+          dispatch(actionCreator(res?.data?.results));
+        } else {
+          console.log("no action creator provided");
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching data:", error);
       }
     },
     [dispatch]
   );
 };
 
-export const useFetchSeries = () => {
-  const dispatch = useDispatch();
-  return useCallback(
-    async (endpoint) => {
-      try {
-        const res = await api.get(endpoint);
-        dispatch(fetchSeries(res?.data?.results));
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
-};
-
-export const useFetchMovies = () => {
-  const dispatch = useDispatch();
-  return useCallback(
-    async (endpoint) => {
-      try {
-        const res = await api.get(endpoint);
-        dispatch(fetchMovies(res?.data?.results));
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
-};
+// export const useFetchImg = () => {
+//   return useCallback(async (src) => {
+//     new Promise((resolve) => {
+//       if (!src) {
+//         resolve(false);
+//         return;
+//       }
+//     });
+//     const img = new Image();
+//     img.onload = () => resolve(true);
+//     img.onerror = () => resolve(false);
+//     img.src = src;
+//   }, []);
+// };
 
 export const useSelectedMovie = () => {
   const dispatch = useDispatch();

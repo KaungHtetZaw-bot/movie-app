@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import MovieDetailNavbar from "./MovieDetailNavbar";
 import RelatedMovie from "./RelatedMovie";
-import CreditsCard from "./CreditsCard";
 import { useParams } from "react-router-dom";
 import { api, api_key } from "../api";
-import { useFetchMovies, useSelectedMovie } from "../utils/help";
+import { useSelectedMovie, useFetch } from "../utils/help";
+import { fetchMovies } from "../redux/actions/movies";
 
 const MovieDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +14,7 @@ const MovieDetail = () => {
   const movies = useSelector((state) => state.movies.movies);
   const { movie_id, media_type } = useParams();
   const fetchMovieById = useSelectedMovie();
-  const fetchingSimilarMovie = useFetchMovies();
+  const fetchingSimilarMovie = useFetch();
 
   // const fetchCredits = async () => {
   //   try {
@@ -33,7 +33,8 @@ const MovieDetail = () => {
           `/${media_type || "movie"}/${parseInt(movie_id)}?api_key=${api_key}`
         );
         await fetchingSimilarMovie(
-          `/${media_type}/${movie_id}/similar?api_key=${api_key}`
+          `/${media_type}/${movie_id}/similar?api_key=${api_key}`,
+          fetchMovies
         );
         // await fetchCredits();
       } catch (error) {
@@ -125,7 +126,6 @@ const MovieDetail = () => {
               </div>
             </div>
           </div>
-          <CreditsCard />
           <MovieDetailNavbar movie={movie} />
           <RelatedMovie movies={movies} />
         </div>
